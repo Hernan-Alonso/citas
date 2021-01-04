@@ -1,32 +1,27 @@
 import Form from './components/Form';
-import Cita from './components/Cita';
+import Appointment from './components/Appointment';
 import React,{useState, useEffect} from 'react';
 function App() {
-  //citas en LS
-  let citasIniciales = JSON.parse(localStorage.getItem('citas'));
-  if(!citasIniciales){
-    citasIniciales = [];
+  let initialAppointments = JSON.parse(localStorage.getItem('appointments'));
+  if(!initialAppointments){
+    initialAppointments = [];
   }
-  //arreglo de citas
-  const [citas, guardarCitas] = useState(citasIniciales);
-  //useeffect para realizar operaciones para cuando el state cambia
+  const [appointments, setAppointments] = useState(initialAppointments);
   useEffect(()=>{
-    if(citasIniciales){
-      localStorage.setItem('citas',JSON.stringify(citas));
+    if(initialAppointments){
+      localStorage.setItem('appointments',JSON.stringify(appointments));
     }else{
-      localStorage.setItem('citas',JSON.stringify([]));
+      localStorage.setItem('appointments',JSON.stringify([]));
     }
-  },[citas])
-  //funcion q tome las citas actuales  y las agregue la nueva
-  const crearCita = cita =>{
-    guardarCitas([...citas, cita]);
+  },[appointments])
+  const createAppointment = appointment =>{
+    setAppointments([...appointments, appointment]);
   }
-  const eliminarCita = id=>{
-    const nuevasCitas = citas.filter(cita => cita.id !== id);
-    guardarCitas(nuevasCitas);
+  const deleteAppointment = id=>{
+    const newAppointment = appointments.filter(appointment => appointment.id !== id);
+    setAppointments(newAppointment);
   }
-  //mensaje condicional
-  const titulo = citas.length === 0 ?'No hay citas':'Administra tus citas';
+  const title = appointments.length === 0 ?'No hay citas':'Administra tus citas';
   return (
     <>
     <h1>Administrador de citas</h1>
@@ -34,16 +29,16 @@ function App() {
       <div className="row">
         <div className="one-half column">
           <Form 
-            crearCita = {crearCita}
+            createAppointment = {createAppointment}
           />
         </div>
         <div className="one-half column">
-          <h2>{titulo}</h2>
-          {citas.map(cita =>(
-            <Cita 
-              key={cita.id}
-              cita={cita}
-              eliminarCita = {eliminarCita}
+          <h2>{title}</h2>
+          {appointments.map(appointment =>(
+            <Appointment 
+              key={appointment.id}
+              appointment={appointment}
+              deleteAppointment = {deleteAppointment}
             />
           ))}
         </div>
