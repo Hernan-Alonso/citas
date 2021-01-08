@@ -1,43 +1,34 @@
 import React, {useState} from 'react'
 import {v4 as uuidv4} from 'uuid';
 
-const Form = ({crearCita}) =>{
-    //Crear State de citas
-    const[cita, actualizarCita] = useState({
+const Form = ({createAppointment}) =>{
+    const[appointment, setAppointment] = useState({
         mascota: '',
         propietario: '',
         fecha:'',
         hora:'',
         sintomas:''
     });
-    const[error, actualiazrError] = useState(false);
-    //funcion onchange
-    const actualizarState = e =>{
-        actualizarCita({
-            ...cita,
+    const[error, setError] = useState(false);
+    const setState = e =>{
+        setAppointment({
+            ...appointment,
             [e.target.name]: e.target.value
         })
     };
-    //extraer valores
-    const {mascota, propietario, fecha, hora, sintomas} = cita;
+    const {mascota, propietario, fecha, hora, sintomas} = appointment;
 
-    //agregar on submit
-    const submitCita = e =>{
+    const submitAppointment = e =>{
        e.preventDefault();
-       //validar
         if(mascota.trim() === '' || propietario.trim() === '' || fecha.trim() === '' || hora.trim() === '' || sintomas.trim() === ''){
-            actualiazrError(true)
+            setError(true)
             return;
         }
-        //eliminar mensaje
-        actualiazrError(false);
-       //asignar ID
-        cita.id = uuidv4();
-        console.log(cita);
-       //crear cita
-        crearCita(cita);
-       //reiniciar form
-       actualizarCita({
+        setError(false);
+        appointment.id = uuidv4();
+        console.log(appointment);
+        createAppointment(appointment);
+       setAppointment({
         mascota: '',
         propietario: '',
         fecha:'',
@@ -50,7 +41,7 @@ const Form = ({crearCita}) =>{
             <h2>Crear Cita</h2>
             {error ? <p className="alerta-error">Todos los campos son obligatorios</p> : null}
             <form
-                onSubmit={submitCita}
+                onSubmit={submitAppointment}
             >
                 <label>Nombre Mascota</label>
                 <input 
@@ -58,7 +49,7 @@ const Form = ({crearCita}) =>{
                     name="mascota"
                     className="u-full-width"
                     placeholder="Nombre Mascota"
-                    onChange={actualizarState}
+                    onChange={setState}
                     value={mascota}
                 />
                  <label>Nombre Dueño</label>
@@ -67,7 +58,7 @@ const Form = ({crearCita}) =>{
                     name="propietario"
                     className="u-full-width"
                     placeholder="Nombre Dueño de la mascota"
-                    onChange={actualizarState}
+                    onChange={setState}
                     value={propietario}
                 />
                  <label>Fecha</label>
@@ -75,7 +66,7 @@ const Form = ({crearCita}) =>{
                     type="date"
                     name="fecha"
                     className="u-full-width"
-                    onChange={actualizarState}
+                    onChange={setState}
                     value={fecha}
                 />
                  <label>Hora</label>
@@ -83,14 +74,14 @@ const Form = ({crearCita}) =>{
                     type="time"
                     name="hora"
                     className="u-full-width"
-                    onChange={actualizarState}
+                    onChange={setState}
                     value={hora}
                 />
                  <label>Síntomas</label>
                 <textarea
                     className="u-full-width"
                     name="sintomas"
-                    onChange={actualizarState}
+                    onChange={setState}
                     value={sintomas}
                 ></textarea>
                 <button
